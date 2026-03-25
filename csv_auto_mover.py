@@ -20,7 +20,29 @@ class CSVHandler(FileSystemEventHandler):
 
         file_path = Path(event.src_path)
         if file_path.suffix.lower() == '.csv':
+            # Wait for file to be fully written (check if size is stable)
+            self.wait_for_file_stable(file_path)
             self.move_csv_to_dashboard(file_path)
+
+    def wait_for_file_stable(self, file_path, timeout=5):
+        """Wait for file to be fully written by checking if size is stable"""
+        initial_size = -1
+        stable_count = 0
+        start_time = time.time()
+
+        while time.time() - start_time < timeout:
+            try:
+                current_size = file_path.stat().st_size
+                if current_size == initial_size:
+                    stable_count += 1
+                    if stable_count >= 3:  # File size stable for 3 checks
+                        break
+                else:
+                    initial_size = current_size
+                    stable_count = 0
+                time.sleep(0.1)  # Check every 100ms
+            except (OSError, FileNotFoundError):
+                time.sleep(0.1)  # File might not be accessible yet
 
     def move_csv_to_dashboard(self, csv_file):
         try:
