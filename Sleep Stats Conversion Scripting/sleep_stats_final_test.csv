@@ -1,4 +1,0 @@
-PatientID,AHI,ODI,SleepTime,Supine,Awakenings,MeanSpO2,NadirSpO2,ApneasPerHour
-P001,15.2,12.8,7.5,45.2,8,95.3,88.1,5.4
-P002,22.1,18.5,6.8,52.3,12,94.7,85.2,8.9
-P003,8.7,6.2,8.2,38.9,5,96.1,91.4,2.1
